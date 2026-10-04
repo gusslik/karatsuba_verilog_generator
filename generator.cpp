@@ -90,14 +90,12 @@ void generate_module(std::ofstream &file, unsigned long n)
          << "\tlogic " << gen_range(split.l) << " a_hi, b_hi;\n"
          << "\tlogic " << gen_range(split.s) << " a_sum, b_sum;\n";
 
-    file << "\talways_comb begin\n"
-         << "\t\ta_hi = a" << gen_range(n, split.h) << ";\n"
-         << "\t\ta_lo = a" << gen_range(split.h, 0) << ";\n"
-         << "\t\tb_hi = b" << gen_range(n, split.h) << ";\n"
-         << "\t\tb_lo = b" << gen_range(split.h, 0) << ";\n"
-         << "\t\ta_sum = a_hi + a_lo;\n"
-         << "\t\tb_sum = b_hi + b_lo;\n"
-         << "\tend\n";
+    file << "\tassign a_hi = a" << gen_range(n, split.h) << ";\n"
+         << "\tassign a_lo = a" << gen_range(split.h, 0) << ";\n"
+         << "\tassign b_hi = b" << gen_range(n, split.h) << ";\n"
+         << "\tassign b_lo = b" << gen_range(split.h, 0) << ";\n"
+         << "\tassign a_sum = a_hi + a_lo;\n"
+         << "\tassign b_sum = b_hi + b_lo;\n";
 
     file << "\tlogic " << gen_range(2 * split.h) << " z0;\n"
          << "\tlogic " << gen_range(2 * split.l) << " z2;\n"

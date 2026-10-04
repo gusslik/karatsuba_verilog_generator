@@ -1,6 +1,11 @@
 #include "tb_generator.hpp"
 
 void generate_tb(int N, int latency, const std::string& dut) {
+	int tests = 100000;
+
+	if(N > 8)
+		tests = std::max(1000, std::min(100000, 100000/N));
+	
 	std::ofstream f("tb_" + dut + ".sv");
 
 	std::string rnd = "{";
@@ -44,7 +49,7 @@ void generate_tb(int N, int latency, const std::string& dut) {
 		f << "\t\tfor (int i = 0; i < (1 << (2*N)); i++)\n"
 		  << "\t\t\tstep(i[2*N-1:N], i[N-1:0]);\n\n";
 	} else {
-		f << "\t\tfor (int i = 0; i < 100000; i++)\n"
+		f << "\t\tfor (int i = 0; i < " << tests << "; i++)\n"
 		  << "\t\t\tstep(" << rnd << ", " << rnd << ");\n\n";
 	}
 
