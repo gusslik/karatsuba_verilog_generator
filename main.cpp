@@ -2,6 +2,9 @@
 #include <fstream>
 
 #include "generator.hpp"
+#include "tb_generator.hpp"
+
+#define LATENCY 3
 
 int main(int argc, char *argv[]){
     if(argc == 1){
@@ -19,6 +22,8 @@ int main(int argc, char *argv[]){
     std::ofstream f(filename);
 
     generate_verilog(f, n);
+
+    generate_tb(n, LATENCY, std::string("karatsuba_" + std::to_string(n)));
 
     return EXIT_SUCCESS;
 }
