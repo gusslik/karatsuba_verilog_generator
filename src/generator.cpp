@@ -171,12 +171,17 @@ void generate_small_ff_module(std::ofstream &file, unsigned long n)
          << "\toutput logic " << gen_range(2 * n) << " out\n"
          << ");\n";
 
-    file << "\tlogic " << gen_range(2 * n) << " p;\n";
+    file << "\tlogic " << gen_range(n) << " a_r, b_r;\n"
+         << "\tlogic " << gen_range(2 * n) << " p, p_r;\n";
 
-    gen_child_module_instance(file, n, "up", "a", "b", "p");
+    gen_child_module_instance(file, n, "up", "a_r", "b_r", "p");
 
-    file << "\talways_ff @(posedge clk)\n"
-         << "\t\tout <= p;\n";
+    file << "\talways_ff @(posedge clk) begin\n"
+         << "\t\ta_r <= a;\n"
+         << "\t\tb_r <= b;\n"
+         << "\t\tp_r <= p;\n"
+         << "\t\tout <= p_r;\n"
+         << "\tend\n";
 
     file << "endmodule" << std::endl;
 }
