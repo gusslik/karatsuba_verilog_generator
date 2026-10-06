@@ -14,11 +14,16 @@
 - для тестов: Icarus Verilog (`sudo apt install iverilog`)
 
 ## Сборка
+### Автоматическая
 
-    cmake -S . -B build
+    make
+
+### Ручная
+
+    cmake -S . build -B
     cmake --build build
 
-## Запуск
+## Ручной запуск
 
     ./build/generator N
 
@@ -28,13 +33,13 @@
 
 Примеры:
 
-    build/generator 64                        # -> karatsuba_64.sv
+    ./build/generator 64                        # -> karatsuba_64.sv
 
 Проверка сгенерированного:
 
     ./build/generator 33
     iverilog -g2012 -o simv karatsuba_33.sv tb_karatsuba_33.sv && vvp simv
-    # ожидаемый вывод: TEST PASSED: N=33, ... vectors
+    # ожидаемый вывод: PASSED: ... vectors
 
 ## Интерфейс сгенерированного модуля
 
@@ -86,11 +91,26 @@
 
 ## Тесты
 
-Проверка сгенерированного:
+### Проверка сгенерированного:
+  1. Собрать проект
 
-    ./build/generator <n>
-    iverilog -g2012 -o simv karatsuba_<n>.sv tb_karatsuba_<n>.sv && vvp simv
-    # ожидаемый вывод: TEST PASSED: N=<n>, ... vectors
+    make
+
+  2. Запустить тесты
+
+    make test
+    
+    # ожидаемый вывод: 
+    RUNNING TEST FOR N=<n>
+    PASSED: N=<n>
+  
+  3. Очистить директорию от папки с тестами
+    
+    make clean
+  Тесты проводятся для N = [1, 2, 3, 4, 5, 7, 8, 9, 16, 33, 64, 65, 128, 255]
+  Или задаются самостоятельно вызовом
+
+    make test TEST_NS="N1 N2 ... N_n"
 
 Сгенерированный тестбенч:
 
@@ -105,13 +125,15 @@
 
 ## Структура проекта
 
-    CMakeLists.txt       сборка и ctest
+    CMakeLists.txt       сборка проекта
     Makefile             обёртка: make / make test / make clean
-    src/main.cpp         командная строка
-    src/generator.cpp    генерация дизайна и тестбенча
+    src/main.cpp         вызов генератора
+    src/generator.cpp    генерация дизайна
     src/generator.hpp
-    tests/run_one.sh     один симуляционный тест (генерация → сборка → симуляция → проверка)
-
+    src/tb_generator.cpp генерация тестбенча
+    src/tb_generator.hpp
+    run_one.sh           один симуляционный тест (генерация → сборка → симуляция → проверка)
+    README.md            информация о проекте и эксплуатации
 ## Ограничения
 
 - Сгенерированный код — SystemVerilog (`logic`, `always_ff`, `always_comb`); для `iverilog` нужен флаг `-g2012`.
